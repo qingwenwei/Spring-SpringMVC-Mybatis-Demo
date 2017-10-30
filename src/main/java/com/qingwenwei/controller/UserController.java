@@ -20,7 +20,7 @@ public class UserController {
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
     public List<User> getAll() {
-        System.out.println("getAll()");
+        logger.info("getAll()");
         List<User> users = this.userService.getAll();
         if(null == users || users.isEmpty()) {
             return null;
@@ -33,6 +33,7 @@ public class UserController {
         if(null == user) {
             return "FAILED";
         }
+        logger.info("add() " + user.getUserName());
         int rowAffected = this.userService.create(user);
         if(rowAffected == 0) {
             return "FAILED";
@@ -45,6 +46,7 @@ public class UserController {
         if(null == user) {
             return "FAILED";
         }
+        logger.info("delete() " + user.getUserName());
         int rowAffected = this.userService.delete(user);
         if(rowAffected == 0) {
             return "FAILED";
@@ -57,6 +59,7 @@ public class UserController {
         if(null == user) {
             return "FAILED";
         }
+        logger.info("update() " + user.getUserName());
         int rowAffected = this.userService.update(user);
         if(rowAffected == 0) {
             return "FAILED";
@@ -69,6 +72,7 @@ public class UserController {
         if(null == id) {
             return null;
         }
+        logger.info("findById() " + id);
         User user = this.userService.findById(id);
         if(null == user) {
             return null;
@@ -81,6 +85,7 @@ public class UserController {
         if(null == userName || userName.equalsIgnoreCase("")) {
             return null;
         }
+        logger.info("findByUserName() " + userName);
         User user = this.userService.findByUserName(userName);
         if(null == user) {
             return null;
