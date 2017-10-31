@@ -5,6 +5,8 @@ import com.qingwenwei.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,77 +21,78 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping(value = "/all", method = RequestMethod.GET)
-    public List<User> getAll() {
-        logger.info("getAll()");
+    public ResponseEntity<List<User>> getAll() {
         List<User> users = this.userService.getAll();
         if(null == users || users.isEmpty()) {
-            return null;
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return users;
+        logger.info("getAll() size: " + users.size());
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public String add(@RequestBody User user) {
+    public ResponseEntity<?> add(@RequestBody User user) {
         if(null == user) {
-            return "FAILED";
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        logger.info("add() " + user.getUserName());
         int rowAffected = this.userService.create(user);
         if(rowAffected == 0) {
-            return "FAILED";
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return "SUCCESS";
+        logger.info("add() " + user.getUserName());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.DELETE)
-    public String delete(@RequestBody User user) {
+    public ResponseEntity<?> delete(@RequestBody User user) {
         if(null == user) {
-            return "FAILED";
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        logger.info("delete() " + user.getUserName());
         int rowAffected = this.userService.delete(user);
         if(rowAffected == 0) {
-            return "FAILED";
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return "SUCCESS";
+        logger.info("delete() " + user.getUserName());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public String update(@RequestBody User user) {
+    public ResponseEntity<?> update(@RequestBody User user) {
         if(null == user) {
-            return "FAILED";
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         logger.info("update() " + user.getUserName());
         int rowAffected = this.userService.update(user);
         if(rowAffected == 0) {
-            return "FAILED";
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return "SUCCESS";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
-    public User findById(@PathVariable Long id) {
+    public ResponseEntity<User> findById(@PathVariable Long id) {
         if(null == id) {
-            return null;
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        logger.info("findById() " + id);
         User user = this.userService.findById(id);
         if(null == user) {
-            return null;
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return user;
+        logger.info("findById(" + id + "): " + user.getUserName());
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/username/{userName}", method = RequestMethod.GET)
-    public User findByUserName(@PathVariable String userName) {
+    public ResponseEntity<User> findByUserName(@PathVariable String userName) {
         if(null == userName || userName.equalsIgnoreCase("")) {
-            return null;
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         logger.info("findByUserName() " + userName);
         User user = this.userService.findByUserName(userName);
         if(null == user) {
-            return null;
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return user;
+        logger.info("findByUserName(" + user.getUserName() + "): " + user.getId());
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
