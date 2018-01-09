@@ -21,14 +21,14 @@ public interface UserDao {
     @Select("SELECT id, userName, firstName, lastName, yearBorn, email, phone, address FROM T_USER WHERE userName = #{userName}")
     User findByUserName(String userName);
 
-    @Update("UPDATE `T_USER` SET firstName = #{firstName}, lastName = #{lastName}, yearBorn = #{yearBorn}, email = #{email}, " +
+    @Update("UPDATE T_USER SET firstName = #{firstName}, lastName = #{lastName}, yearBorn = #{yearBorn}, email = #{email}, " +
             "phone = #{phone}, address = #{address} WHERE userName = #{userName}")
     int update(User user);
 
-    @Insert("INSERT INTO `T_USER` (`userName`, `firstName`, `lastName`, `yearBorn`, `email`, `phone`, `address`)" +
-            "VALUES (#{userName}, #{firstName}, #{lastName}, #{yearBorn}, #{email}, #{phone}, #{address});")
+    @Insert("INSERT INTO T_USER (userName, firstName, lastName, yearBorn, email, phone, address)" +
+            "VALUES (#{userName}, #{firstName}, #{lastName}, #{yearBorn}, #{email}, #{phone}, #{address})")
     int create(User user);
 
-    @Delete("DELETE FROM `T_USER` WHERE userName = #{userName}")
+    @Delete("DELETE FROM T_USER WHERE userName = #{userName}")
     int delete(User user);
 }
